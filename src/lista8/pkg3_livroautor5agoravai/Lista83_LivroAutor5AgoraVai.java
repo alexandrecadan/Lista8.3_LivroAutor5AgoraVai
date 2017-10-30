@@ -5,6 +5,7 @@
  */
 package lista8.pkg3_livroautor5agoravai;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -150,7 +151,8 @@ public class Lista83_LivroAutor5AgoraVai {
         System.out.println("Digite o id do livro");
         Scanner sc = new Scanner(System.in);
         int id = sc.nextInt();
-        for (Autor lista : LivroDAO.lerAutores(id)) {
+        Connection con = ConnectionFactory.getConnection();
+        for (Autor lista : LivroDAO.lerAutores(id, con)) {
             System.out.println(lista.getNome());
         }
     }
@@ -160,6 +162,7 @@ public class Lista83_LivroAutor5AgoraVai {
         System.out.println("Digite o id do autor");
         Scanner sc = new Scanner(System.in);
         int id = sc.nextInt();
+        Connection con = ConnectionFactory.getConnection();
         for (Livro lista : AutorDAO.lerLivro(id)) {
             System.out.println(lista.getTitulo());
         }

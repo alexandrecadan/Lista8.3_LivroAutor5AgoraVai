@@ -19,6 +19,10 @@ public final class Livro {
     private String titulo;
     private List<Autor> autores;
 
+    public Livro(String titulo){
+    	this.titulo=titulo;
+    }
+    
     public Livro(String titulo,List<Autor> autores) {
         this.titulo = titulo;
         this.autores = new ArrayList();

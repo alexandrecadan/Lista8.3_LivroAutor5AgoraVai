@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutorDAO {
-
+    
+    private static Connection con;
     private final String stmtInserir = "INSERT INTO autor(nome) VALUES(?)";
     private final String stmtConsultar = "SELECT * FROM autor WHERE id = ?";
     private final String stmtListar = "SELECT * FROM autor";
@@ -128,6 +129,29 @@ public class AutorDAO {
             };
         }
 
+    }
+
+    //CASE 6
+    public static List<Livro> lerLivro(long idAutor) throws Exception {
+        //Select para pegar os livros de um autor
+        String sql = "SELECT livro.id,livro.titulo"
+                + " FROM livro"
+                + " INNER JOIN livro_autor"
+                + " 	ON livro.id = livro_autor.idLivro"
+                + " WHERE livro_autor.idAutor = ? ";
+        PreparedStatement stmt = null;
+        List<Livro> livros = null;
+        stmt = con.prepareStatement(sql);
+        stmt.setLong(1, idAutor);
+        ResultSet resultado = stmt.executeQuery();
+        livros = new ArrayList<Livro>();
+        while (resultado.next()) {
+            Livro livroLido = new Livro(resultado.getString("titulo"));
+            livroLido.setId(resultado.getInt("id"));
+            livros.add(livroLido);
+        }
+
+        return livros;
     }
 
 }

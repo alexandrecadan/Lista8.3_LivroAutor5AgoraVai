@@ -37,40 +37,65 @@ public class LivroDAO {
 
             con.commit();
         } catch (SQLException ex) {
-            try{con.rollback();}catch(SQLException ex1){System.out.println("Erro ao tentar rollback. Ex="+ex1.getMessage());};
-            throw new RuntimeException("Erro ao inserir um livro no banco de dados. Origem="+ex.getMessage());
-        } finally{
-            try{stmt.close();}catch(Exception ex){System.out.println("Erro ao fechar stmt. Ex="+ex.getMessage());};
-            try{con.close();;}catch(Exception ex){System.out.println("Erro ao fechar conexão. Ex="+ex.getMessage());};
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                System.out.println("Erro ao tentar rollback. Ex=" + ex1.getMessage());
+            };
+            throw new RuntimeException("Erro ao inserir um livro no banco de dados. Origem=" + ex.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();;
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
         }
     }
-     private int lerIdLivro(PreparedStatement stmt) throws SQLException {
+
+    private int lerIdLivro(PreparedStatement stmt) throws SQLException {
         ResultSet rs = stmt.getGeneratedKeys();
         rs.next();
         return rs.getInt(1);
-    }   
+    }
 
     public Livro consultarLivro(int id) {
-        Connection con=null;
-        PreparedStatement stmt=null;
-        ResultSet rs=null;
-        try{
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
             con = ConnectionFactory.getConnection();
             stmt = con.prepareStatement(stmtConsultar);
             Livro livroLido = null;
             stmt.setLong(1, id);
             rs = stmt.executeQuery();
             rs.next();
-            List<Autor> listaAutores = lerAutores(id,con);
+            List<Autor> listaAutores = lerAutores(id, con);
             livroLido = new Livro(rs.getString("titulo"), listaAutores);
             livroLido.setId(rs.getInt("Id"));
-            return livroLido;           
-        }catch(SQLException ex){
-            throw new RuntimeException("Erro ao consultar um livro no banco de dados. Origem="+ex.getMessage());            
-        }finally{
-            try{rs.close();}catch(Exception ex){System.out.println("Erro ao fechar rs. Ex="+ex.getMessage());};
-            try{stmt.close();}catch(Exception ex){System.out.println("Erro ao fechar stmt. Ex="+ex.getMessage());};
-            try{con.close();;}catch(Exception ex){System.out.println("Erro ao fechar conexão. Ex="+ex.getMessage());};            
+            return livroLido;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro ao consultar um livro no banco de dados. Origem=" + ex.getMessage());
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar rs. Ex=" + ex.getMessage());
+            };
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();;
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
         }
 
     }
@@ -87,7 +112,7 @@ public class LivroDAO {
         }
     }
 
-    private List<Autor> lerAutores(long idLivro, Connection con) throws SQLException{
+    public static List<Autor> lerAutores(long idLivro, Connection con) throws SQLException {
         //Select para pegar os autores de um livro
         String sql = "SELECT autor.id,autor.nome"
                 + " FROM autor"
@@ -109,34 +134,42 @@ public class LivroDAO {
         return autores;
     }
 
-
-
     public List<Livro> listarLivroComAutores() {
         Connection con = null;
         PreparedStatement stmt = null;
         ResultSet rs = null;
-        try{
+        try {
             con = ConnectionFactory.getConnection();
-            stmt = con.prepareStatement(stmtListaLivroAutor);            
+            stmt = con.prepareStatement(stmtListaLivroAutor);
             rs = stmt.executeQuery();
             List<Livro> listaLivros = new ArrayList<Livro>();
             while (rs.next()) {
-                List<Autor> listAutores = lerAutores(rs.getInt(1),con);
+                List<Autor> listAutores = lerAutores(rs.getInt(1), con);
                 Livro livro = new Livro(rs.getString(2), listAutores);
                 livro.setId(rs.getInt(1));
                 listaLivros.add(livro);
             }
 
-            return listaLivros;            
-        }catch(SQLException ex){
-            throw new RuntimeException("Erro ao listar um livro com autores no banco de dados. Origem="+ex.getMessage());            
-        }finally{
-            try{rs.close();}catch(Exception ex){System.out.println("Erro ao fechar rs. Ex="+ex.getMessage());};
-            try{stmt.close();}catch(Exception ex){System.out.println("Erro ao fechar stmt. Ex="+ex.getMessage());};
-            try{con.close();;}catch(Exception ex){System.out.println("Erro ao fechar conexão. Ex="+ex.getMessage());};                
+            return listaLivros;
+        } catch (SQLException ex) {
+            throw new RuntimeException("Erro ao listar um livro com autores no banco de dados. Origem=" + ex.getMessage());
+        } finally {
+            try {
+                rs.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar rs. Ex=" + ex.getMessage());
+            };
+            try {
+                stmt.close();
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar stmt. Ex=" + ex.getMessage());
+            };
+            try {
+                con.close();;
+            } catch (Exception ex) {
+                System.out.println("Erro ao fechar conexão. Ex=" + ex.getMessage());
+            };
         }
-        
-        
 
     }
 }
