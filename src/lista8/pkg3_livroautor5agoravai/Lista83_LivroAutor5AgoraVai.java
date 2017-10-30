@@ -162,7 +162,6 @@ public class Lista83_LivroAutor5AgoraVai {
         System.out.println("Digite o id do autor");
         Scanner sc = new Scanner(System.in);
         int id = sc.nextInt();
-        Connection con = ConnectionFactory.getConnection();
         for (Livro lista : AutorDAO.lerLivro(id)) {
             System.out.println(lista.getTitulo());
         }

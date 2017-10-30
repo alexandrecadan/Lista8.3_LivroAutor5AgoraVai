@@ -137,10 +137,12 @@ public class AutorDAO {
         String sql = "SELECT livro.id,livro.titulo"
                 + " FROM livro"
                 + " INNER JOIN livro_autor"
-                + " 	ON livro.id = livro_autor.idLivro"
-                + " WHERE livro_autor.idAutor = ? ";
+                + " 	ON livro.id = livro_autor.idlivro"
+                + " WHERE livro_autor.idautor = ? ";
         PreparedStatement stmt = null;
         List<Livro> livros = null;
+        con = ConnectionFactory.getConnection();
+        //HAHAHHAHAHAHA
         stmt = con.prepareStatement(sql);
         stmt.setLong(1, idAutor);
         ResultSet resultado = stmt.executeQuery();
