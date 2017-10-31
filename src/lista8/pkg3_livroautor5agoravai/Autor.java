@@ -10,6 +10,7 @@ package lista8.pkg3_livroautor5agoravai;
  * @author alexandre
  */
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public final class Autor {
@@ -20,7 +21,13 @@ public final class Autor {
 
     public Autor(String nome) {
         this.nome = nome;
+
+    }
+    
+    public Autor(String nome, List<Livro> livros) {
+        this.nome = nome;
         this.livros = new ArrayList();
+        this.setLivros(livros);
     }
 
     public void setNome(String nome) {
@@ -32,8 +39,10 @@ public final class Autor {
     }
 
     public void setLivros(List<Livro> livros) {
-         for(Livro livro: livros){
-             this.adicionarLivro(livro);
+        Iterator iterator = livros.iterator();
+        while (iterator.hasNext()) {
+            Livro livro = (Livro) iterator.next();
+            this.adicionarLivro(livro);
         }
     }
 

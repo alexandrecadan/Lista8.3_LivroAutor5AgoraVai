@@ -99,9 +99,9 @@ public class LivroDAO {
         }
 
     }
-
+    //Criar mesmo método para AutorDAO
     private void gravarAutores(Livro livro, Connection con) throws SQLException {
-        String sql = "INSERT INTO livro_autor (idLivro, idAutor) VALUES ( ?, ?)";
+        String sql = "INSERT INTO livro_autor (idAutor, idLivro) VALUES ( ?, ?)";
         PreparedStatement stmt;
         stmt = con.prepareStatement(sql);
         stmt.setInt(1, livro.getId());

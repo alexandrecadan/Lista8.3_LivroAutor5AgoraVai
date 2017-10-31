@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AutorDAO {
-    
-    private static Connection con;
+
+    //private static Connection con;
     private final String stmtInserir = "INSERT INTO autor(nome) VALUES(?)";
     private final String stmtConsultar = "SELECT * FROM autor WHERE id = ?";
     private final String stmtListar = "SELECT * FROM autor";
@@ -32,8 +32,16 @@ public class AutorDAO {
             stmt.setString(1, autor.getNome());
             stmt.executeUpdate();
             autor.setId(lerIdAutor(stmt));
+            this.gravarLivros(autor, con);
+
+            con.commit();
         } catch (SQLException ex) {
-            throw new RuntimeException("Erro ao inserir um autor no banco de dados. Origem=" + ex.getMessage());
+            try {
+                con.rollback();
+            } catch (SQLException ex1) {
+                System.out.println("Erro ao tentar rollback. Ex=" + ex1.getMessage());
+            };
+            //throw new RuntimeException("Erro ao inserir um autor no banco de dados. Origem=" + ex.getMessage());
         } finally {
             try {
                 stmt.close();
@@ -131,8 +139,20 @@ public class AutorDAO {
 
     }
 
+    private void gravarLivros(Autor autor, Connection con) throws SQLException {
+        String sql = "INSERT INTO livro_autor (idAutor, idLivro) VALUES ( ?, ?)";
+        PreparedStatement stmt;
+        stmt = con.prepareStatement(sql);
+        stmt.setInt(1, autor.getId());
+        List<Livro> livros = autor.getLivros();
+        for (Livro livro : livros) {
+            stmt.setLong(2, livro.getId());
+            stmt.executeUpdate();
+        }
+    }
+
     //CASE 6
-    public static List<Livro> lerLivro(long idAutor) throws Exception {
+    public static List<Livro> lerLivro(long idAutor, Connection con) throws Exception {
         //Select para pegar os livros de um autor
         String sql = "SELECT livro.id,livro.titulo"
                 + " FROM livro"

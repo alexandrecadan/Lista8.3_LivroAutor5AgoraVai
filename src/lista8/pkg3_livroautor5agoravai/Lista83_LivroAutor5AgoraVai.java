@@ -74,11 +74,35 @@ public class Lista83_LivroAutor5AgoraVai {
         }
     }
 
-    public void incluirAutor() throws Exception {
+    public void incluirAutor() {
         System.out.print("Digite o nome do autor:");
         Scanner sc = new Scanner(System.in, "ISO-8859-1");
         String nome = sc.nextLine();
-        Autor autor = new Autor(nome);
+        //Autor autor = new Autor(nome);
+        int numLivros = 1;
+        List<Livro> listaLivros = new ArrayList();
+        int idLivro;
+        do {
+            try {
+                Scanner sc3 = new Scanner(System.in);
+                System.out.print("ID Livro " + numLivros + ":");
+                idLivro = sc3.nextInt();
+                if (idLivro == -1){
+                    break;
+                }
+                Livro livro = livroDAO.consultarLivro(idLivro);
+                if (livro != null) {
+                    listaLivros.add(livro);
+                    numLivros++;
+                } else {
+                   System.out.println("Livro não existe!"); 
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                System.out.println("ID livro não é inteiro ou inválido!");
+            } 
+        } while (true);
+        Autor autor = new Autor(nome, listaLivros);
         autorDAO.inserirAutor(autor);
     }
 
@@ -88,7 +112,7 @@ public class Lista83_LivroAutor5AgoraVai {
         String titulo = sc.nextLine();
         int numAutores = 1;
         List<Autor> listaAutores = new ArrayList();
-        int idAutor = 0;
+        int idAutor;
         do {
             try {
                 Scanner sc2 = new Scanner(System.in, "ISO-8859-1");
@@ -162,7 +186,8 @@ public class Lista83_LivroAutor5AgoraVai {
         System.out.println("Digite o id do autor");
         Scanner sc = new Scanner(System.in);
         int id = sc.nextInt();
-        for (Livro lista : AutorDAO.lerLivro(id)) {
+        Connection con = ConnectionFactory.getConnection();
+        for (Livro lista : AutorDAO.lerLivro(id, con)) {
             System.out.println(lista.getTitulo());
         }
     }
